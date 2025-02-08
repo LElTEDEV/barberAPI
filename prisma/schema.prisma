@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String  @id @default(uuid())
+  name               String
+  email              String  @unique
+  endereco           String?
+  password           String
+  stripe_customer_id String?
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  subscriptions Subscription?
+  haircuts      Haircut[]
+  services      Service[]
+
+  @@map("users")
+}
+
+model Subscription {
+  id      String @id
+  status  String
+  priceId String
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String @unique
+
+  @@map("subscriptions")
+}
+
+model Haircut {
+  id     String  @id @default(uuid())
+  name   String
+  price  Float
+  status Boolean @default(true)
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  services Service[]
+
+  @@map("haircuts")
+}
+
+model Service {
+  id       String @id @default(uuid())
+  customer String
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  hair       Haircut @relation(fields: [haircut_id], references: [id])
+  haircut_id String
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("services")
+}
