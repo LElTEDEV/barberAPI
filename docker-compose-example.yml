@@ -1,0 +1,12 @@
+version: ""
+
+services:
+  nomeDaAplicacao:
+    image: ""
+    container_name: ""
+    ports:
+      - "":""
+    environment:
+      - POSTGRESQL_USERNAME=""
+      - POSTGRESQL_PASSWORD=""
+      - POSTGRESQL_DATABASE=""
